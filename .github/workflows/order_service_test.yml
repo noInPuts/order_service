@@ -1,0 +1,25 @@
+name: Restaurant Service test
+
+on:
+  pull_request:
+    branches:
+      - '*'
+jobs:
+  build:
+
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '17'
+
+      - name: Running order service tests
+        run: mvn clean test
+
+      - name: Running pmd:check tests
+        run: mvn pmd:check
