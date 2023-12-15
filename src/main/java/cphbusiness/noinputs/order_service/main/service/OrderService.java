@@ -4,7 +4,6 @@ import cphbusiness.noinputs.order_service.main.dto.OrderFoodItemDTO;
 import cphbusiness.noinputs.order_service.main.exception.FoodItemNotFoundException;
 import cphbusiness.noinputs.order_service.main.exception.RestaurantNotFoundException;
 
-import java.net.UnknownHostException;
 import java.util.List;
 
 public interface OrderService {

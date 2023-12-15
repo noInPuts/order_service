@@ -7,8 +7,6 @@ import cphbusiness.noinputs.order_service.main.exception.FoodItemNotFoundExcepti
 import cphbusiness.noinputs.order_service.main.exception.InvalidJwtTokenException;
 import cphbusiness.noinputs.order_service.main.exception.RestaurantNotFoundException;
 import cphbusiness.noinputs.order_service.main.facade.ServiceFacade;
-import cphbusiness.noinputs.order_service.main.service.JwtService;
-import cphbusiness.noinputs.order_service.main.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.ContextValue;
