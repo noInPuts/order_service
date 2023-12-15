@@ -1,0 +1,20 @@
+type Query {
+    getOrders(id: ID): String!
+}
+
+type Mutation {
+    createOrder(order: order!): String!
+}
+
+input order {
+    restaurantId: ID!
+}
+
+input OrderFoodItemInput {
+    id: ID!
+    quantity: Int!
+}
+
+type OrderResponse {
+    message: String!
+}
