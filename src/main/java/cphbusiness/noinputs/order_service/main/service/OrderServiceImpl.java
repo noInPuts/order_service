@@ -2,7 +2,6 @@ package cphbusiness.noinputs.order_service.main.service;
 
 import cphbusiness.noinputs.order_service.main.dto.OrderDTO;
 import cphbusiness.noinputs.order_service.main.dto.OrderFoodItemDTO;
-import cphbusiness.noinputs.order_service.main.exception.FoodItemNotFoundException;
 import cphbusiness.noinputs.order_service.main.model.FoodItem;
 import cphbusiness.noinputs.order_service.main.model.Order;
 import cphbusiness.noinputs.order_service.main.model.OrderFoodItem;

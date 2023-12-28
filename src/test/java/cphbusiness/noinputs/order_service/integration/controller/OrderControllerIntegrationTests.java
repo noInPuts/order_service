@@ -2,8 +2,6 @@ package cphbusiness.noinputs.order_service.integration.controller;
 
 import cphbusiness.noinputs.order_service.main.dto.FoodItemDTO;
 import cphbusiness.noinputs.order_service.main.dto.RestaurantDTO;
-import cphbusiness.noinputs.order_service.main.exception.FoodItemNotFoundException;
-import cphbusiness.noinputs.order_service.main.exception.InvalidJwtTokenException;
 import cphbusiness.noinputs.order_service.main.exception.RestaurantNotFoundException;
 import cphbusiness.noinputs.order_service.main.service.MessageService;
 import io.jsonwebtoken.Jwts;
@@ -11,7 +9,6 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

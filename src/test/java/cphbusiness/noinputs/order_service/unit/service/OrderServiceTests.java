@@ -7,7 +7,6 @@ import cphbusiness.noinputs.order_service.main.exception.RestaurantNotFoundExcep
 import cphbusiness.noinputs.order_service.main.model.Order;
 import cphbusiness.noinputs.order_service.main.repository.OrderRepository;
 import cphbusiness.noinputs.order_service.main.service.OrderService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -7,13 +7,10 @@ import cphbusiness.noinputs.order_service.main.exception.InvalidJwtTokenExceptio
 import cphbusiness.noinputs.order_service.main.exception.RestaurantNotFoundException;
 import cphbusiness.noinputs.order_service.main.facade.ServiceFacade;
 import jakarta.annotation.PostConstruct;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.graphql.GraphQlResponse;
-import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.client.MockMvcWebTestClient;
