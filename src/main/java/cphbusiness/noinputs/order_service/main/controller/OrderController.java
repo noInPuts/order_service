@@ -1,7 +1,6 @@
 package cphbusiness.noinputs.order_service.main.controller;
 
 
-import cphbusiness.noinputs.order_service.main.dto.CreateOrderDTO;
 import cphbusiness.noinputs.order_service.main.dto.OrderDTO;
 import cphbusiness.noinputs.order_service.main.exception.FoodItemNotFoundException;
 import cphbusiness.noinputs.order_service.main.exception.InvalidJwtTokenException;
@@ -27,20 +26,12 @@ public class OrderController {
     }
 
     @MutationMapping(name = "createOrder")
-    public String createOrder(@ContextValue(name = "jwt-token") HttpCookie jwtToken, @Argument(name = "order") OrderDTO order) {
-        CreateOrderDTO createdOrder;
+    public OrderDTO createOrder(@ContextValue(name = "jwt-token") HttpCookie jwtToken, @Argument(name = "order") OrderDTO order) throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException {
+        OrderDTO createdOrder;
 
-        try {
-            createdOrder = serviceFacade.createOrder(jwtToken.getValue(), order.getRestaurantId(), null);
-        } catch (InvalidJwtTokenException e) {
-            return "Invalid JWT token";
-        } catch (RestaurantNotFoundException e) {
-            return "Restaurant not found";
-        } catch (FoodItemNotFoundException e) {
-            return "Food item not found";
-        }
+        createdOrder = serviceFacade.createOrder(jwtToken.getValue(), order.getRestaurantId(), order.getFoodItems());
 
-        return "Order created: " + createdOrder.getOrderId();
+        return createdOrder;
     }
 
     @QueryMapping(name = "getOrders")

@@ -1,12 +1,17 @@
 package cphbusiness.noinputs.order_service.main.service;
 
+import cphbusiness.noinputs.order_service.main.dto.OrderDTO;
 import cphbusiness.noinputs.order_service.main.dto.OrderFoodItemDTO;
 import cphbusiness.noinputs.order_service.main.exception.FoodItemNotFoundException;
-import cphbusiness.noinputs.order_service.main.exception.RestaurantNotFoundException;
+import cphbusiness.noinputs.order_service.main.model.FoodItem;
+import cphbusiness.noinputs.order_service.main.model.Order;
+import cphbusiness.noinputs.order_service.main.model.OrderFoodItem;
+import cphbusiness.noinputs.order_service.main.repository.FoodItemRepository;
 import cphbusiness.noinputs.order_service.main.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,45 +20,38 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
 
+    private final FoodItemRepository foodItemRepository;
+
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, FoodItemRepository foodItemRepository) {
         this.orderRepository = orderRepository;
+        this.foodItemRepository = foodItemRepository;
     }
 
-    public long createOrder(Long userId, Long restaurantId, List<OrderFoodItemDTO> foodItems) throws RestaurantNotFoundException, FoodItemNotFoundException {
-        // Verify Restaurant with GRPC
-
-
-        return 1L;
-
-
-        //List<OrderFoodItem> orderFoodItems = new ArrayList<>();
-        //Order order = new Order();
-
-        /*
-        List<FoodItem> foodItemList = restaurantOptional.get().getMenu();
-        for (OrderFoodItemDTO orderFoodItemDTO : foodItems) {
-            Optional<FoodItem> foodItemOptional = foodItemList.stream().filter(foodItem -> foodItem.getFoodItemId().equals(orderFoodItemDTO.getId())).findFirst();
-
-            if(foodItemOptional.isPresent()) {
-                orderFoodItems.add(new OrderFoodItem(foodItemOptional.get(), orderFoodItemDTO.getQuantity()));
-            } else {
-                throw new FoodItemNotFoundException("Food item not found");
-            }
-        }
+    public OrderDTO createOrder(Long userId, Long restaurantId, List<OrderFoodItemDTO> foodItems) {
+        Order order = new Order();
 
         order.setCustomerId(userId);
-        order.setRestaurant(restaurantOptional.get());
+        order.setRestaurantId(restaurantId);
+
         order = orderRepository.save(order);
 
-        for (OrderFoodItem orderFoodItem : orderFoodItems) {
+        List<OrderFoodItem> foodItemList = new ArrayList<>();
+
+        for (OrderFoodItemDTO orderFoodItemDTO : foodItems) {
+            FoodItem foodItem = new FoodItem(orderFoodItemDTO.getName(), orderFoodItemDTO.getPrice(), orderFoodItemDTO.getId());
+            foodItem = foodItemRepository.save(foodItem);
+
+            OrderFoodItem orderFoodItem = new OrderFoodItem(foodItem, orderFoodItemDTO.getQuantity());
             orderFoodItem.setOrder(order);
+            foodItemList.add(orderFoodItem);
         }
 
-        order.setFoodItems(orderFoodItems);
+        order.setFoodItems(foodItemList);
+        order = orderRepository.save(order);
 
-        orderRepository.save(order);
 
-         */
+
+        return new OrderDTO(order.getRestaurantId(), order.getId(), foodItems);
     }
 }
