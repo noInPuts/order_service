@@ -18,3 +18,6 @@ WORKDIR /usr/src/app
 
 # Copy the JAR file from the build image to this image
 COPY --from=build /usr/src/app/target/order_service.jar .
+
+# Specify the command to run your application
+CMD ["java", "-jar", "order_service.jar"]
