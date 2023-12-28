@@ -18,15 +18,9 @@ public class FoodItem {
     private String name;
 
     @NotNull(message = "Food item price cannot be null")
-    private Long price;
+    private double price;
 
     public FoodItem() {
-    }
-
-    public FoodItem(long id, String dish, long price) {
-        this.id = id;
-        this.name = dish;
-        this.price = price;
     }
 
     public FoodItem(String dish, long price) {
@@ -34,7 +28,7 @@ public class FoodItem {
         this.price = price;
     }
 
-    public FoodItem(String name, long price, Long foodItemId) {
+    public FoodItem(String name, double price, Long foodItemId) {
         this.name = name;
         this.price = price;
         this.foodItemId = foodItemId;
@@ -56,11 +50,11 @@ public class FoodItem {
         this.name = name;
     }
 
-    public Long getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

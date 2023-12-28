@@ -1,16 +1,24 @@
 package cphbusiness.noinputs.order_service.unit.facade;
 
-import cphbusiness.noinputs.order_service.main.dto.CreateOrderDTO;
+import cphbusiness.noinputs.order_service.main.dto.OrderDTO;
+import cphbusiness.noinputs.order_service.main.dto.OrderFoodItemDTO;
+import cphbusiness.noinputs.order_service.main.dto.RestaurantDTO;
 import cphbusiness.noinputs.order_service.main.exception.FoodItemNotFoundException;
 import cphbusiness.noinputs.order_service.main.exception.InvalidJwtTokenException;
 import cphbusiness.noinputs.order_service.main.exception.RestaurantNotFoundException;
 import cphbusiness.noinputs.order_service.main.facade.ServiceFacade;
 import cphbusiness.noinputs.order_service.main.service.JwtService;
+import cphbusiness.noinputs.order_service.main.service.MessageService;
 import cphbusiness.noinputs.order_service.main.service.OrderService;
+import net.datafaker.Faker;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -29,14 +37,25 @@ public class ServiceFacadeTests {
     @MockBean
     private JwtService jwtService;
 
+    @MockBean
+    private MessageService messageService;
+
+    @BeforeEach
+    public void setup() throws RestaurantNotFoundException {
+        Faker faker = new Faker();
+        when(messageService.getRestaurant(any(Long.class))).thenReturn(new RestaurantDTO(1L, faker.restaurant().name(), null));
+    }
+
     @Test
     public void createOrderTest() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException {
         // Arrange
         when(jwtService.getUserIdFromJwtToken(any(String.class))).thenReturn(1L);
-        when(orderService.createOrder(any(Long.class), any(Long.class), any())).thenReturn(1L);
+        OrderDTO orderDTO = new OrderDTO(1L, 1L);
+        when(orderService.createOrder(any(Long.class), any(Long.class), any())).thenReturn(orderDTO);
+        List<OrderFoodItemDTO> orderFoodItemDTOS = new ArrayList<>();
 
         // Act
-        CreateOrderDTO createOrderDTO = serviceFacade.createOrder("dummy-token", 1L, null);
+        OrderDTO createOrderDTO = serviceFacade.createOrder("dummy-token", 1L, orderFoodItemDTOS);
 
         // Assert
         assertEquals(1L, createOrderDTO.getOrderId());
@@ -46,29 +65,21 @@ public class ServiceFacadeTests {
     public void createOrderShouldThrowInvalidJwtTokenException() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException {
         // Arrange
         when(jwtService.getUserIdFromJwtToken(any(String.class))).thenThrow(new InvalidJwtTokenException("Invalid JWT token"));
-        when(orderService.createOrder(any(Long.class), any(Long.class), any())).thenReturn(1L);
+        OrderDTO orderDTO = new OrderDTO(1L, 1L);
+        when(orderService.createOrder(any(Long.class), any(Long.class), any())).thenReturn(orderDTO);
 
         // Act and Assert
         assertThrows(InvalidJwtTokenException.class, () -> serviceFacade.createOrder("invalid-token", 1L, null));
     }
 
     @Test
-    public void createOrderShouldThrowRestaurantNotFoundException() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException {
+    public void createOrderShouldThrowRestaurantNotFoundException() throws InvalidJwtTokenException, RestaurantNotFoundException {
         // Arrange
         when(jwtService.getUserIdFromJwtToken(any(String.class))).thenReturn(1L);
-        when(orderService.createOrder(any(Long.class), any(Long.class), any())).thenThrow(new RestaurantNotFoundException("Restaurant not found"));
+        when(messageService.getRestaurant(any(Long.class))).thenThrow(new RestaurantNotFoundException("Restaurant not found"));
+        ArrayList<OrderFoodItemDTO> orderFoodItemDTOS = new ArrayList<>();
 
         // Act and Assert
-        assertThrows(RestaurantNotFoundException.class, () -> serviceFacade.createOrder("dummy-token", 1L, null));
-    }
-
-    @Test
-    public void createOrderShouldThrowFoodItemNotFoundException() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException {
-        // Arrange
-        when(jwtService.getUserIdFromJwtToken(any(String.class))).thenReturn(1L);
-        when(orderService.createOrder(any(Long.class), any(Long.class), any())).thenThrow(new FoodItemNotFoundException("Food item not found"));
-
-        // Act and Assert
-        assertThrows(FoodItemNotFoundException.class, () -> serviceFacade.createOrder("dummy-token", 1L, null));
+        assertThrows(RestaurantNotFoundException.class, () -> serviceFacade.createOrder("dummy-token", 1L, orderFoodItemDTOS));
     }
 }

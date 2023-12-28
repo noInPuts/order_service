@@ -1,11 +1,14 @@
 package cphbusiness.noinputs.order_service.main.facade;
 
-import cphbusiness.noinputs.order_service.main.dto.CreateOrderDTO;
+import cphbusiness.noinputs.order_service.main.dto.FoodItemDTO;
+import cphbusiness.noinputs.order_service.main.dto.OrderDTO;
 import cphbusiness.noinputs.order_service.main.dto.OrderFoodItemDTO;
+import cphbusiness.noinputs.order_service.main.dto.RestaurantDTO;
 import cphbusiness.noinputs.order_service.main.exception.FoodItemNotFoundException;
 import cphbusiness.noinputs.order_service.main.exception.InvalidJwtTokenException;
 import cphbusiness.noinputs.order_service.main.exception.RestaurantNotFoundException;
 import cphbusiness.noinputs.order_service.main.service.JwtService;
+import cphbusiness.noinputs.order_service.main.service.MessageService;
 import cphbusiness.noinputs.order_service.main.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,17 +20,29 @@ public class ServiceFacadeImpl implements ServiceFacade {
     private final OrderService orderService;
 
     private final JwtService jwtService;
+    private final MessageService messageService;
 
     @Autowired
-    public ServiceFacadeImpl(OrderService orderService, JwtService jwtService) {
+    public ServiceFacadeImpl(OrderService orderService, JwtService jwtService, MessageService messageService) {
         this.orderService = orderService;
         this.jwtService = jwtService;
+        this.messageService = messageService;
     }
 
     @Override
-    public CreateOrderDTO createOrder(String jwtToken, Long restaurantId, List<OrderFoodItemDTO> foodItems) throws RestaurantNotFoundException, FoodItemNotFoundException, InvalidJwtTokenException {
+    public OrderDTO createOrder(String jwtToken, Long restaurantId, List<OrderFoodItemDTO> foodItems) throws RestaurantNotFoundException, FoodItemNotFoundException, InvalidJwtTokenException {
         Long userId = jwtService.getUserIdFromJwtToken(jwtToken);
-        Long orderId = orderService.createOrder(userId, restaurantId, null);
-        return new CreateOrderDTO(orderId);
+        RestaurantDTO restaurantDTO = messageService.getRestaurant(restaurantId);
+
+        for (OrderFoodItemDTO foodItem : foodItems) {
+            FoodItemDTO foodItemDTO = restaurantDTO.getMenu().stream().findFirst()
+                    .filter(item -> foodItem.getId().equals(item.getFoodItemId()))
+                    .orElseThrow(() -> new FoodItemNotFoundException("Food item not found"));
+
+            foodItem.setPrice(foodItemDTO.getPrice());
+            foodItem.setName(foodItemDTO.getName());
+        }
+
+        return orderService.createOrder(userId, restaurantId, foodItems);
     }
 }

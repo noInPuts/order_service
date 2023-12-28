@@ -8,6 +8,7 @@ type Mutation {
 
 input order {
     restaurantId: ID!
+    foodItems: [OrderFoodItemInput!]!
 }
 
 input OrderFoodItemInput {
@@ -16,5 +17,5 @@ input OrderFoodItemInput {
 }
 
 type OrderResponse {
-    message: String!
+    orderId: Int!
 }

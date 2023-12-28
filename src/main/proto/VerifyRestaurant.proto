@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option java_package = "cphbusiness.noinputs.order_service.main.proto";
+
+service GetRestaurant {
+  rpc GetRestaurant(GetRestaurantRequest) returns (GetRestaurantResponse) {}
+}
+
+message GetRestaurantRequest {
+  // int64 = long
+  int64 restaurantId = 1;
+}
+
+message GetRestaurantResponse {
+  bool valid = 1;
+  string name = 2;
+  repeated MenuItems menuItems = 3;
+}
+
+message MenuItems {
+  int64 id = 1;
+  string name = 2;
+  int32 price = 3;
+}
