@@ -45,7 +45,7 @@ public class OrderControllerTests {
     }
 
     @Test
-    public void testCreateOrder() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException {
+    public void testCreateOrder() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException, InterruptedException {
         // Arrange
         ArrayList<OrderFoodItemDTO> foodItems = new ArrayList<>();
         OrderFoodItemDTO orderFoodItemDTO = new OrderFoodItemDTO(1L, 2);
@@ -64,7 +64,7 @@ public class OrderControllerTests {
     }
 
     @Test
-    public void createOrderShouldReturnInvalidJwtTokenWhenParsingInvalidJWTCookie() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException {
+    public void createOrderShouldReturnInvalidJwtTokenWhenParsingInvalidJWTCookie() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException, InterruptedException {
         // Arrange
         when(serviceFacade.createOrder(any(String.class), any(Long.class), any())).thenThrow(new InvalidJwtTokenException("Invalid JWT token"));
 
@@ -79,7 +79,7 @@ public class OrderControllerTests {
     }
 
     @Test
-    public void createOrderShouldReturnRestaurantNotFoundException() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException {
+    public void createOrderShouldReturnRestaurantNotFoundException() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException, InterruptedException {
         // Arrange
         when(serviceFacade.createOrder(any(String.class), any(Long.class), any())).thenThrow(new RestaurantNotFoundException("Restaurant not found"));
 
@@ -94,7 +94,7 @@ public class OrderControllerTests {
     }
 
     @Test
-    public void createOrderShouldReturnFoodItemNotFoundException() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException {
+    public void createOrderShouldReturnFoodItemNotFoundException() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException, InterruptedException {
         // Arrange
         when(serviceFacade.createOrder(any(String.class), any(Long.class), any())).thenThrow(new FoodItemNotFoundException("Food item not found"));
         WebTestClient.Builder client =

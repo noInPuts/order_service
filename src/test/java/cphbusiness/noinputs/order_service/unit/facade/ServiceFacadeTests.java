@@ -39,13 +39,13 @@ public class ServiceFacadeTests {
     private MessageService messageService;
 
     @BeforeEach
-    public void setup() throws RestaurantNotFoundException {
+    public void setup() throws RestaurantNotFoundException, InterruptedException {
         Faker faker = new Faker();
         when(messageService.getRestaurant(any(Long.class))).thenReturn(new RestaurantDTO(1L, faker.restaurant().name(), null));
     }
 
     @Test
-    public void createOrderTest() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException {
+    public void createOrderTest() throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException, InterruptedException {
         // Arrange
         when(jwtService.getUserIdFromJwtToken(any(String.class))).thenReturn(1L);
         OrderDTO orderDTO = new OrderDTO(1L, 1L);
@@ -71,7 +71,7 @@ public class ServiceFacadeTests {
     }
 
     @Test
-    public void createOrderShouldThrowRestaurantNotFoundException() throws InvalidJwtTokenException, RestaurantNotFoundException {
+    public void createOrderShouldThrowRestaurantNotFoundException() throws InvalidJwtTokenException, RestaurantNotFoundException, InterruptedException {
         // Arrange
         when(jwtService.getUserIdFromJwtToken(any(String.class))).thenReturn(1L);
         when(messageService.getRestaurant(any(Long.class))).thenThrow(new RestaurantNotFoundException("Restaurant not found"));

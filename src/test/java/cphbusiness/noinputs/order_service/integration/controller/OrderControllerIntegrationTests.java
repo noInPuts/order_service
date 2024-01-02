@@ -70,7 +70,7 @@ public class OrderControllerIntegrationTests {
 
 
     @BeforeEach
-    public void setup() throws RestaurantNotFoundException {
+    public void setup() throws RestaurantNotFoundException, InterruptedException {
         Faker faker = new Faker();
         ArrayList<FoodItemDTO> foodItems = new ArrayList<>();
         foodItems.add(new FoodItemDTO(1L, "Lasagna", 4.93));
@@ -92,7 +92,7 @@ public class OrderControllerIntegrationTests {
     }
 
     @Test
-    public void createOrderShouldReturnRestaurantNotFoundException() throws RestaurantNotFoundException {
+    public void createOrderShouldReturnRestaurantNotFoundException() throws RestaurantNotFoundException, InterruptedException {
         // Arrange
         when(messageService.getRestaurant(any(Long.class))).thenThrow(new RestaurantNotFoundException("Restaurant not found"));
 
