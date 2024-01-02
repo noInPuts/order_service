@@ -2,9 +2,7 @@ package cphbusiness.noinputs.order_service.unit.controller;
 
 import cphbusiness.noinputs.order_service.main.dto.OrderDTO;
 import cphbusiness.noinputs.order_service.main.dto.OrderFoodItemDTO;
-import cphbusiness.noinputs.order_service.main.exception.FoodItemNotFoundException;
-import cphbusiness.noinputs.order_service.main.exception.InvalidJwtTokenException;
-import cphbusiness.noinputs.order_service.main.exception.RestaurantNotFoundException;
+import cphbusiness.noinputs.order_service.main.exception.*;
 import cphbusiness.noinputs.order_service.main.facade.ServiceFacade;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.Test;
@@ -55,7 +53,7 @@ public class OrderControllerTests {
         orderFoodItemDTO.setPrice(4.93);
         foodItems.add(orderFoodItemDTO);
         when(serviceFacade.createOrder(any(String.class), any(Long.class), any())).thenReturn(new OrderDTO(1L, 1L, foodItems));
-        String query = "mutation CreateOrder {   createOrder(order: {restaurantId: \"1\", foodItems: {quantity: 2, id: 1}})\n}";
+        String query = "mutation CreateOrder { createOrder(order: {restaurantId: \"1\", foodItems: {quantity: 2, id: 1}})}";
 
         // Act and Assert
         graphQlTester.document(query)
@@ -115,5 +113,24 @@ public class OrderControllerTests {
                     assertThat(errors).isNotEmpty(); 
                     assertThat(errors.get(0).getMessage()).contains("INTERNAL_ERROR");
                 });
+    }
+
+    @Test
+    public void getOrder() throws OrderNotFoundException, InvalidJwtTokenException, NotAuthorizedException {
+        // Arrange
+        ArrayList<OrderFoodItemDTO> foodItems = new ArrayList<>();
+        OrderFoodItemDTO orderFoodItemDTO = new OrderFoodItemDTO(1L, 2);
+        orderFoodItemDTO.setName("Fettuccine Alfredo");
+        orderFoodItemDTO.setPrice(4.93);
+        foodItems.add(orderFoodItemDTO);
+        when(serviceFacade.getOrder(any(String.class), any(Long.class))).thenReturn(new OrderDTO(1L, 1L, foodItems));
+        String query = "query GetOrder { getOrder(id: 1)}";
+
+        // Act and assert
+        graphQlTester.document(query)
+                .execute()
+                .path("data.getOrder")
+                .entity(String.class)
+                .isEqualTo("OrderDTO{restaurantId=1, foodItems=[OrderFoodItemDTO{id=1, quantity=2, price=4.93, name='Fettuccine Alfredo'}], orderId=1}");
     }
 }

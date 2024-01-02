@@ -2,6 +2,7 @@ package cphbusiness.noinputs.order_service.main.service;
 
 import cphbusiness.noinputs.order_service.main.dto.OrderDTO;
 import cphbusiness.noinputs.order_service.main.dto.OrderFoodItemDTO;
+import cphbusiness.noinputs.order_service.main.exception.OrderNotFoundException;
 import cphbusiness.noinputs.order_service.main.model.FoodItem;
 import cphbusiness.noinputs.order_service.main.model.Order;
 import cphbusiness.noinputs.order_service.main.model.OrderFoodItem;
@@ -12,10 +13,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-
 
     private final OrderRepository orderRepository;
 
@@ -52,5 +53,27 @@ public class OrderServiceImpl implements OrderService {
 
 
         return new OrderDTO(order.getRestaurantId(), order.getId(), foodItems);
+    }
+
+    @Override
+    public OrderDTO getOrder(Long orderId) throws OrderNotFoundException {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+
+        if(optionalOrder.isEmpty()) {
+            throw new OrderNotFoundException("Order not found");
+        }
+
+        Order order = optionalOrder.get();
+
+        // Converting OrderFoodItem to OrderFoodItemDTO
+        List<OrderFoodItemDTO> orderFoodItemDTOList = new ArrayList<>();
+        for(OrderFoodItem orderFoodItem : order.getFoodItems()) {
+            OrderFoodItemDTO orderFoodItemDTO = new OrderFoodItemDTO(orderFoodItem.getId(), orderFoodItem.getQuantity());
+            orderFoodItemDTO.setPrice(orderFoodItem.getFoodItem().getPrice());
+            orderFoodItemDTO.setName(orderFoodItem.getFoodItem().getName());
+            orderFoodItemDTOList.add(orderFoodItemDTO);
+        }
+
+        return new OrderDTO(order.getRestaurantId(), order.getId(), orderFoodItemDTOList, order.getCustomerId());
     }
 }

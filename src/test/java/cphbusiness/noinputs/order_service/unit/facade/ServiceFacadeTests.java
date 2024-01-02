@@ -3,9 +3,7 @@ package cphbusiness.noinputs.order_service.unit.facade;
 import cphbusiness.noinputs.order_service.main.dto.OrderDTO;
 import cphbusiness.noinputs.order_service.main.dto.OrderFoodItemDTO;
 import cphbusiness.noinputs.order_service.main.dto.RestaurantDTO;
-import cphbusiness.noinputs.order_service.main.exception.FoodItemNotFoundException;
-import cphbusiness.noinputs.order_service.main.exception.InvalidJwtTokenException;
-import cphbusiness.noinputs.order_service.main.exception.RestaurantNotFoundException;
+import cphbusiness.noinputs.order_service.main.exception.*;
 import cphbusiness.noinputs.order_service.main.facade.ServiceFacade;
 import cphbusiness.noinputs.order_service.main.service.JwtService;
 import cphbusiness.noinputs.order_service.main.service.MessageService;
@@ -81,5 +79,41 @@ public class ServiceFacadeTests {
 
         // Act and Assert
         assertThrows(RestaurantNotFoundException.class, () -> serviceFacade.createOrder("dummy-token", 1L, orderFoodItemDTOS));
+    }
+
+    @Test
+    public void getOrderTest() throws OrderNotFoundException, InvalidJwtTokenException, NotAuthorizedException {
+        // Arrange
+        when(jwtService.getUserIdFromJwtToken(any(String.class))).thenReturn(1L);
+        when(orderService.getOrder(any(Long.class))).thenReturn(new OrderDTO(1L, 1L, 1L));
+
+        // Act
+        OrderDTO order = serviceFacade.getOrder("dummyToken", 1L);
+
+        // Assert
+        assertEquals(1L, order.getOrderId());
+        assertEquals(1L, order.getRestaurantId());
+    }
+
+    @Test
+    public void getOrderShouldThrowInvalidJwtTokenException() throws OrderNotFoundException, InvalidJwtTokenException {
+        // Arrange
+        when(jwtService.getUserIdFromJwtToken(any(String.class))).thenThrow(new InvalidJwtTokenException("Invalid JWT token"));
+        when(orderService.getOrder(any(Long.class))).thenReturn(new OrderDTO(1L, 1L));
+
+        // Act and Assert
+        assertThrows(InvalidJwtTokenException.class, () -> serviceFacade.getOrder("dummyToken", 1L));
+    }
+
+    @Test
+    public void getOrderShouldThrowNotAuthorizedWhenUserIsNotAuthorized() throws OrderNotFoundException, InvalidJwtTokenException {
+        // Arrange
+        when(jwtService.getUserIdFromJwtToken(any(String.class))).thenReturn(1L);
+        OrderDTO order = new OrderDTO(1L, 2L);
+        order.setCustomerId(2L);
+        when(orderService.getOrder(any(Long.class))).thenReturn(order);
+
+        // Act and Assert
+        assertThrows(NotAuthorizedException.class, () -> serviceFacade.getOrder("dummyToken", 1L));
     }
 }

@@ -1,14 +1,26 @@
 type Query {
-    getOrders(id: ID): String!
+    getOrder(id: ID!): String!
 }
 
 type Mutation {
     createOrder(order: order!): String!
 }
 
+input responseOrder {
+    id: ID!
+    restaurantId: ID!
+    foodItems: [OrderFoodItemsResponse!]!
+}
+
 input order {
     restaurantId: ID!
     foodItems: [OrderFoodItemInput!]!
+}
+
+input OrderFoodItemsResponse {
+    id: ID!
+    quantity: Int!
+    price: Float!
 }
 
 input OrderFoodItemInput {

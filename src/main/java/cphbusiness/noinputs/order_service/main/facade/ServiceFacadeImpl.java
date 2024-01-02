@@ -4,9 +4,7 @@ import cphbusiness.noinputs.order_service.main.dto.FoodItemDTO;
 import cphbusiness.noinputs.order_service.main.dto.OrderDTO;
 import cphbusiness.noinputs.order_service.main.dto.OrderFoodItemDTO;
 import cphbusiness.noinputs.order_service.main.dto.RestaurantDTO;
-import cphbusiness.noinputs.order_service.main.exception.FoodItemNotFoundException;
-import cphbusiness.noinputs.order_service.main.exception.InvalidJwtTokenException;
-import cphbusiness.noinputs.order_service.main.exception.RestaurantNotFoundException;
+import cphbusiness.noinputs.order_service.main.exception.*;
 import cphbusiness.noinputs.order_service.main.service.JwtService;
 import cphbusiness.noinputs.order_service.main.service.MessageService;
 import cphbusiness.noinputs.order_service.main.service.OrderService;
@@ -44,5 +42,17 @@ public class ServiceFacadeImpl implements ServiceFacade {
         }
 
         return orderService.createOrder(userId, restaurantId, foodItems);
+    }
+
+    @Override
+    public OrderDTO getOrder(String jwtToken, Long orderId) throws OrderNotFoundException, InvalidJwtTokenException, NotAuthorizedException {
+        Long userId = jwtService.getUserIdFromJwtToken(jwtToken);
+        OrderDTO orderDTO = orderService.getOrder(orderId);
+
+        if (orderDTO.getCustomerId() != userId) {
+            throw new NotAuthorizedException("This user is not authorized to view this order");
+        }
+
+        return orderDTO;
     }
 }
