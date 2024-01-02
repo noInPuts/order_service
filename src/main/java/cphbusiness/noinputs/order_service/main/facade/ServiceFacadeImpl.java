@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ServiceFacadeImpl implements ServiceFacade {
@@ -33,8 +34,9 @@ public class ServiceFacadeImpl implements ServiceFacade {
         RestaurantDTO restaurantDTO = messageService.getRestaurant(restaurantId);
 
         for (OrderFoodItemDTO foodItem : foodItems) {
-            FoodItemDTO foodItemDTO = restaurantDTO.getMenu().stream().findFirst()
+            FoodItemDTO foodItemDTO = restaurantDTO.getMenu().stream()
                     .filter(item -> foodItem.getId().equals(item.getFoodItemId()))
+                    .findFirst()
                     .orElseThrow(() -> new FoodItemNotFoundException("Food item not found"));
 
             foodItem.setPrice(foodItemDTO.getPrice());

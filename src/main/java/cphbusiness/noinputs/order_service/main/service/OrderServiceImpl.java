@@ -50,8 +50,6 @@ public class OrderServiceImpl implements OrderService {
         order.setFoodItems(foodItemList);
         order = orderRepository.save(order);
 
-
-
         return new OrderDTO(order.getRestaurantId(), order.getId(), foodItems);
     }
 

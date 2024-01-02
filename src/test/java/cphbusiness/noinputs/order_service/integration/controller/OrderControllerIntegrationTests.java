@@ -88,7 +88,7 @@ public class OrderControllerIntegrationTests {
                 .execute()
                 .path("data.createOrder")
                 .entity(String.class)
-                .isEqualTo("OrderDTO{restaurantId=1, foodItems=[OrderFoodItemDTO{id=1, quantity=2, price=4.93, name='Lasagna'}], orderId=1}");
+                .isEqualTo("{ \"restaurantId\": 1, \"foodItems\": [{\"id\":1, \"quantity\":2, \"price\":4.93, \"name\":\"Lasagna\"}], \"orderId\": 1 }");
     }
 
     @Test

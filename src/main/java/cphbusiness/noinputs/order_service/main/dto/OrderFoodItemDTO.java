@@ -55,11 +55,11 @@ public class OrderFoodItemDTO {
 
     @Override
     public String toString() {
-        return "OrderFoodItemDTO{" +
-                "id=" + id +
-                ", quantity=" + quantity +
-                ", price=" + price +
-                ", name='" + name + '\'' +
+        return "{" +
+                "\"id\":" + id +
+                ", \"quantity\":" + quantity +
+                ", \"price\":" + price +
+                ", \"name\":\"" + name + '\"' +
                 '}';
     }
 }

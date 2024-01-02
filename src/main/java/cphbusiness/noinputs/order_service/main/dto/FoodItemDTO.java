@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 public class FoodItemDTO {
 
         @NotNull
-        private long foodItemId;
+        private Long foodItemId;
 
         @NotEmpty
         private String name;
@@ -15,17 +15,17 @@ public class FoodItemDTO {
         public FoodItemDTO() {
         }
 
-        public FoodItemDTO(long foodItemId, String name, double price) {
+        public FoodItemDTO(Long foodItemId, String name, double price) {
             this.foodItemId = foodItemId;
             this.name = name;
             this.price = price;
         }
 
-        public long getFoodItemId() {
+        public Long getFoodItemId() {
             return foodItemId;
         }
 
-        public void setFoodItemId(long foodItemId) {
+        public void setFoodItemId(Long foodItemId) {
             this.foodItemId = foodItemId;
         }
 
