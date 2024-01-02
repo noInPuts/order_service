@@ -33,8 +33,9 @@ public class ServiceFacadeImpl implements ServiceFacade {
         RestaurantDTO restaurantDTO = messageService.getRestaurant(restaurantId);
 
         for (OrderFoodItemDTO foodItem : foodItems) {
-            FoodItemDTO foodItemDTO = restaurantDTO.getMenu().stream().findFirst()
+            FoodItemDTO foodItemDTO = restaurantDTO.getMenu().stream()
                     .filter(item -> foodItem.getId().equals(item.getFoodItemId()))
+                    .findFirst()
                     .orElseThrow(() -> new FoodItemNotFoundException("Food item not found"));
 
             foodItem.setPrice(foodItemDTO.getPrice());

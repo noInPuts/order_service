@@ -81,10 +81,9 @@ public class OrderDTO {
 
     @Override
     public String toString() {
-        return "OrderDTO{" +
-                "restaurantId=" + restaurantId +
-                ", foodItems=" + foodItems +
-                ", orderId=" + orderId +
-                '}';
+        return "{ \"restaurantId\": " + restaurantId +
+                ", \"foodItems\": " + foodItems +
+                ", \"orderId\": " + orderId
+            + " }";
     }
 }
