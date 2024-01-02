@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public class OrderDTO {
-
-
     @NotNull
     private Long restaurantId;
 
@@ -14,6 +12,8 @@ public class OrderDTO {
     private List<OrderFoodItemDTO> foodItems;
 
     private Long orderId;
+
+    private long customerId;
 
     public OrderDTO() {
     }
@@ -28,10 +28,23 @@ public class OrderDTO {
         this.orderId = orderId;
     }
 
+    public OrderDTO(Long restaurantId, Long orderId, long customerId) {
+        this.restaurantId = restaurantId;
+        this.orderId = orderId;
+        this.customerId = customerId;
+    }
+
     public OrderDTO(Long restaurantId, Long id, List<OrderFoodItemDTO> foodItems) {
         this.restaurantId = restaurantId;
         this.orderId = id;
         this.foodItems = foodItems;
+    }
+
+    public OrderDTO(Long restaurantId, Long id, List<OrderFoodItemDTO> foodItems, long customerId) {
+        this.restaurantId = restaurantId;
+        this.orderId = id;
+        this.foodItems = foodItems;
+        this.customerId = customerId;
     }
 
     public Long getRestaurantId() {
@@ -56,6 +69,14 @@ public class OrderDTO {
 
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
+    }
+
+    public long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
     }
 
     @Override
