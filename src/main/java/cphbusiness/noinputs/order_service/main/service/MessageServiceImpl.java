@@ -7,6 +7,7 @@ import cphbusiness.noinputs.order_service.main.proto.GetRestaurantGrpc;
 import cphbusiness.noinputs.order_service.main.proto.VerifyRestaurant;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,13 +15,8 @@ import java.util.ArrayList;
 @Service
 public class MessageServiceImpl extends GetRestaurantGrpc.GetRestaurantImplBase implements MessageService {
 
-    private final ManagedChannel channel;
-
-    public MessageServiceImpl() {
-         channel = ManagedChannelBuilder.forAddress("localhost", 9090)
-                .usePlaintext()
-                .build();
-    }
+    @Value("${grpc.serveradress}")
+    private String grpcServerAdress;
 
     @Override
     public RestaurantDTO getRestaurant(long restaurantId) throws RestaurantNotFoundException {
@@ -38,6 +34,9 @@ public class MessageServiceImpl extends GetRestaurantGrpc.GetRestaurantImplBase 
     }
 
     private VerifyRestaurant.GetRestaurantResponse getRestaurantResponse(long restaurantId) {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(grpcServerAdress, 9090)
+            .usePlaintext()
+            .build();
         GetRestaurantGrpc.GetRestaurantBlockingStub stub = GetRestaurantGrpc.newBlockingStub(channel);
 
         return stub.getRestaurant(VerifyRestaurant.GetRestaurantRequest.newBuilder()
