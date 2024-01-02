@@ -23,7 +23,7 @@ public class OrderController {
     }
 
     @MutationMapping(name = "createOrder")
-    public OrderDTO createOrder(@ContextValue(name = "jwt-token") HttpCookie jwtToken, @Argument(name = "order") OrderDTO order) throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException {
+    public OrderDTO createOrder(@ContextValue(name = "jwt-token") HttpCookie jwtToken, @Argument(name = "order") OrderDTO order) throws InvalidJwtTokenException, RestaurantNotFoundException, FoodItemNotFoundException, InterruptedException {
         return serviceFacade.createOrder(jwtToken.getValue(), order.getRestaurantId(), order.getFoodItems());
     }
     @QueryMapping(name = "getOrder")

@@ -19,7 +19,7 @@ public class MessageServiceImpl extends GetRestaurantGrpc.GetRestaurantImplBase 
     private String grpcServerAdress;
 
     @Override
-    public RestaurantDTO getRestaurant(long restaurantId) throws RestaurantNotFoundException {
+    public RestaurantDTO getRestaurant(long restaurantId) throws RestaurantNotFoundException, InterruptedException {
         VerifyRestaurant.GetRestaurantResponse response = getRestaurantResponse(restaurantId);
 
         if(!response.getValid()) throw new RestaurantNotFoundException("Restaurant not found");
@@ -33,14 +33,18 @@ public class MessageServiceImpl extends GetRestaurantGrpc.GetRestaurantImplBase 
         return new RestaurantDTO(restaurantId, response.getName(), foodItems);
     }
 
-    private VerifyRestaurant.GetRestaurantResponse getRestaurantResponse(long restaurantId) {
+    private VerifyRestaurant.GetRestaurantResponse getRestaurantResponse(long restaurantId) throws InterruptedException {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(grpcServerAdress, 9090)
             .usePlaintext()
             .build();
         GetRestaurantGrpc.GetRestaurantBlockingStub stub = GetRestaurantGrpc.newBlockingStub(channel);
-
-        return stub.getRestaurant(VerifyRestaurant.GetRestaurantRequest.newBuilder()
+        VerifyRestaurant.GetRestaurantResponse response = stub.getRestaurant(VerifyRestaurant.GetRestaurantRequest.newBuilder()
                 .setRestaurantId(restaurantId)
                 .build());
+
+        channel.shutdown();
+        channel.awaitTermination(5, java.util.concurrent.TimeUnit.SECONDS);
+
+        return response;
     }
 }

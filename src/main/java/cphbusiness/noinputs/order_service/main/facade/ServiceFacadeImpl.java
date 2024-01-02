@@ -28,7 +28,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
     }
 
     @Override
-    public OrderDTO createOrder(String jwtToken, Long restaurantId, List<OrderFoodItemDTO> foodItems) throws RestaurantNotFoundException, FoodItemNotFoundException, InvalidJwtTokenException {
+    public OrderDTO createOrder(String jwtToken, Long restaurantId, List<OrderFoodItemDTO> foodItems) throws RestaurantNotFoundException, FoodItemNotFoundException, InvalidJwtTokenException, InterruptedException {
         Long userId = jwtService.getUserIdFromJwtToken(jwtToken);
         RestaurantDTO restaurantDTO = messageService.getRestaurant(restaurantId);
 
